@@ -8,6 +8,11 @@
     <groupId>com.jonas</groupId>
     <artifactId>jonas-api-tester</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <properties>
+        <!-- Default so plain `mvn test` works -->
+        <baseUrl>https://jsonplaceholder.typicode.com</baseUrl>
+        <!-- If you already have other properties, just add this line inside that block -->
+    </properties>
 
     <dependencies>
         <!-- ✅ RestAssured -->
@@ -34,6 +39,14 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.17.1</version>
+            <scope>test</scope>
+        </dependency>
+
+
     </dependencies>
 
     <build>
@@ -43,7 +56,37 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.1.2</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <!-- This makes ${baseUrl} available to System.getProperty("baseUrl") in your tests -->
+                        <baseUrl>${baseUrl}</baseUrl>
+                    </systemPropertyVariables>
+                </configuration>
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>local</id>
+            <properties>
+                <baseUrl>https://jsonplaceholder.typicode.com</baseUrl>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>staging</id>
+            <properties>
+                <!-- replace with your real staging host when you have it -->
+                <baseUrl>https://staging.api.company.com</baseUrl>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>prod</id>
+            <properties>
+                <!-- replace with real prod host -->
+                <baseUrl>https://api.company.com</baseUrl>
+            </properties>
+        </profile>
+    </profiles>
 </project>

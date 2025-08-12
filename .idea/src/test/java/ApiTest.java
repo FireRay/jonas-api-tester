@@ -1,15 +1,31 @@
-import io.restassured.RestAssured;
-import org.junit.jupiter.api.Test;
+package api;
 
-import static io.restassured.RestAssured.*;
-import static org.hamcrest.Matchers.*;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 
 public class ApiTest {
 
-    @Test
-    public void testGetRequest() {
-        RestAssured.baseURI = "https://jsonplaceholder.typicode.com";
+    @BeforeEach
+    void setup() {
+        // Make base URL configurable via system property, with a default
+        RestAssured.baseURI = System.getProperty(
+                "baseUrl",
+                "https://jsonplaceholder.typicode.com"
+        );
+    }
 
+    @Test
+    void testGetRequest() {
         given()
                 .when()
                 .get("/posts/1")
@@ -19,13 +35,15 @@ public class ApiTest {
     }
 
     @Test
-    public void testPostRequest() {
-        RestAssured.baseURI = "https://jsonplaceholder.typicode.com";
+    void testPostRequest() {
+        Map<String, Object> body = new HashMap<>();
+        body.put("title", "Jonas test");
+        body.put("body", "Practicing a POST request");
+        body.put("userId", 7);
 
         given()
-                .header("Content-type", "application/json")
-                .and()
-                .body("{\"title\":\"Jonas test\",\"body\":\"Practicing a POST request\",\"userId\":7}")
+                .contentType(ContentType.JSON)
+                .body(body)
                 .when()
                 .post("/posts")
                 .then()
@@ -35,13 +53,16 @@ public class ApiTest {
     }
 
     @Test
-    public void testPutRequest() {
-        RestAssured.baseURI = "https://jsonplaceholder.typicode.com";
+    void testPutRequest() {
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("id", 1);
+        payload.put("title", "Updated Title");
+        payload.put("body", "Updated body");
+        payload.put("userId", 1);
 
         given()
-                .header("Content-type", "application/json")
-                .and()
-                .body("{\"id\":1,\"title\":\"Updated Title\",\"body\":\"Updated body\",\"userId\":1}")
+                .contentType(ContentType.JSON)
+                .body(payload)
                 .when()
                 .put("/posts/1")
                 .then()
@@ -51,14 +72,31 @@ public class ApiTest {
     }
 
     @Test
-    public void testDeleteRequest() {
-        RestAssured.baseURI = "https://jsonplaceholder.typicode.com";
-
-        when()
+    void testDeleteRequest() {
+        given()
+                .when()
                 .delete("/posts/1")
                 .then()
                 .statusCode(200);
     }
 
+    @Test
+    void testUnknownEndpointReturns404() {
+        given()
+                .when()
+                .get("/postssss/1")
+                .then()
+                .statusCode(404);
+    }
 
+    @ParameterizedTest
+    @CsvSource({"1,1", "2,1", "3,1"})
+    void posts_have_expected_user(int postId, int expectedUserId) {
+        given()
+                .when()
+                .get("/posts/{id}", postId)
+                .then()
+                .statusCode(200)
+                .body("userId", equalTo(expectedUserId));
+    }
 }
