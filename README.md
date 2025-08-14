@@ -13,6 +13,7 @@ Built with **Java**, **JUnit 5**, **RestAssured**, **Hamcrest**, and **Maven**.
 - [x] `DELETE` request test to remove post
 
 ## 📂 Structure
+`````
 jonas-api-tester/
 ├── src/
 │ └── test/
@@ -22,5 +23,4 @@ jonas-api-tester/
 │ └── ApiTest.java
 ├── pom.xml
 └── README.md
-
-
+`````
