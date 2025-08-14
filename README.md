@@ -13,12 +13,12 @@ Built with **Java**, **JUnit 5**, **RestAssured**, **Hamcrest**, and **Maven**.
 - [x] `DELETE` request test to remove post
 
 ## 📂 Structure
-
-```bash
 jonas-api-tester/
 ├── src/
-│   └── test/
-│       └── java/
-│           └── ApiTest.java
+│ └── test/
+│ └── java/
+│ ├── motivation/
+│ │ └── MotivationTests.java
+│ └── ApiTest.java
 ├── pom.xml
 └── README.md
