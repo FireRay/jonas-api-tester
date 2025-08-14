@@ -1,5 +1,7 @@
 # jonas-api-tester
 
+[![CI](https://github.com/FireRay/jonas-api-tester/actions/workflows/ci.yml/badge.svg)](https://github.com/FireRay/jonas-api-tester/actions/workflows/ci.yml)
+
 🚀 Automated REST API Testing Framework  
 Built with **Java**, **JUnit 5**, **RestAssured**, **Hamcrest**, and **Maven**.
 
@@ -13,8 +15,7 @@ Built with **Java**, **JUnit 5**, **RestAssured**, **Hamcrest**, and **Maven**.
 
 
 ## 📂 Structure
-
-```bash
+`````
 jonas-api-tester/
 ├── src/
 │ └── test/
@@ -24,3 +25,4 @@ jonas-api-tester/
 │ └── ApiTest.java
 ├── pom.xml
 └── README.md
+`````
